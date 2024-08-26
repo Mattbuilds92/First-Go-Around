@@ -3,54 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awana Scorekeeper</title>
+    <title>Awana Game Score</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
-        }
-        .team {
-            margin-bottom: 20px;
-        }
-        .score {
-            font-size: 2em;
-            margin: 10px 0;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
-        }
+        /* Add your CSS here */
     </style>
 </head>
 <body>
-    <h1>Awana Scorekeeper</h1>
-    <div class="team">
-        <h2>Team 1</h2>
-        <div class="score" id="score1">0</div>
-        <button onclick="adjustScore('score1', 1)">+1</button>
-        <button onclick="adjustScore('score1', -1)">-1</button>
+    <h1>Awana Game Score</h1>
+    <div id="team-scores">
+        <div id="Red" class="team">
+            <h2>Red</h2>
+            <p>Points: <span id="Red-points">0</span></p>
+            <button onclick="addPoints('Red', 25)">+25 Points</button>
+            <button onclick="subtractPoints('Red', 25)">-25 Points</button>
+        </div>
+        <div id="Blue" class="team">
+            <h2>Blue</h2>
+            <p>Points: <span id="Blue-points">0</span></p>
+            <button onclick="addPoints('Blue', 25)">+25 Points</button>
+            <button onclick="subtractPoints('Blue', 25)">-25 Points</button>
+        </div>
+        <div id="Green" class="team">
+            <h2>Green</h2>
+            <p>Points: <span id="Green-points">0</span></p>
+            <button onclick="addPoints('Green', 25)">+25 Points</button>
+            <button onclick="subtractPoints('Green', 25)">-25 Points</button>
+        </div>
+        <div id="Yellow" class="team">
+            <h2>Yellow</h2>
+            <p>Points: <span id="Yellow-points">0</span></p>
+            <button onclick="addPoints('Yellow', 25)">+25 Points</button>
+            <button onclick="subtractPoints('Yellow', 25)">-25 Points</button>
+        </div>
     </div>
-    <div class="team">
-        <h2>Team 2</h2>
-        <div class="score" id="score2">0</div>
-        <button onclick="adjustScore('score2', 1)">+1</button>
-        <button onclick="adjustScore('score2', -1)">-1</button>
+    <h2>Rankings</h2>
+    <div>
+        <label for="first-place">First Place:</label>
+        <select id="first-place" onchange="updateRanking()">
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Yellow">Yellow</option>
+        </select>
     </div>
-    <button onclick="resetScores()">Reset</button>
+    <div>
+        <label for="second-place">Second Place:</label>
+        <select id="second-place" onchange="updateRanking()">
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Yellow">Yellow</option>
+        </select>
+    </div>
+    <div>
+        <label for="third-place">Third Place:</label>
+        <select id="third-place" onchange="updateRanking()">
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Yellow">Yellow</option>
+        </select>
+    </div>
+    <button onclick="scoreTeams()">Score</button>
 
-    <script>
-        function adjustScore(id, change) {
-            const scoreElement = document.getElementById(id);
-            let currentScore = parseInt(scoreElement.textContent);
-            currentScore += change;
-            scoreElement.textContent = currentScore;
-        }
-
-        function resetScores() {
-            document.getElementById('score1').textContent = 0;
-            document.getElementById('score2').textContent = 0;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

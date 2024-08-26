@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#team-scores {
+    display: flex;
+    justify-content: space-around;
+}
+
+.team {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+}
+
+button {
+    margin: 5px;
+}
