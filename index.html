@@ -5,66 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Awana Game Score</title>
     <style>
-        /* Add your CSS here */
+        /* Add your CSS styles here */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            justify-content: space-between;
+        }
+
+        .team-boxes {
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+        }
+
+        .team-box {
+            height: 60px;
+            margin: 5px 0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .ranking-label {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .score-controls {
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+            align-items: center;
+        }
+
+        .score-controls div {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .score-controls button {
+            margin: 0 5px;
+        }
+
+        .team-scores {
+            display: flex;
+            flex-direction: column;
+            width: 40%;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
-    <h1>Awana Game Score</h1>
-    <div id="team-scores">
-        <div id="Red" class="team">
-            <h2>Red</h2>
-            <p>Points: <span id="Red-points">0</span></p>
-            <button onclick="addPoints('Red', 25)">+25 Points</button>
-            <button onclick="subtractPoints('Red', 25)">-25 Points</button>
+    <div class="container">
+        <div class="team-boxes">
+            <div id="Red" class="team-box" style="background-color: red;" onclick="selectRanking('Red')">
+                <span id="Red-rank" class="ranking-label"></span>
+            </div>
+            <div id="Blue" class="team-box" style="background-color: blue;" onclick="selectRanking('Blue')">
+                <span id="Blue-rank" class="ranking-label"></span>
+            </div>
+            <div id="Green" class="team-box" style="background-color: green;" onclick="selectRanking('Green')">
+                <span id="Green-rank" class="ranking-label"></span>
+            </div>
+            <div id="Yellow" class="team-box" style="background-color: yellow;" onclick="selectRanking('Yellow')">
+                <span id="Yellow-rank" class="ranking-label"></span>
+            </div>
         </div>
-        <div id="Blue" class="team">
-            <h2>Blue</h2>
-            <p>Points: <span id="Blue-points">0</span></p>
-            <button onclick="addPoints('Blue', 25)">+25 Points</button>
-            <button onclick="subtractPoints('Blue', 25)">-25 Points</button>
+
+        <div class="score-controls">
+            <h2>Adjust Points</h2>
+            <div>
+                <button onclick="addPoints('Red', 25)">+25</button>
+                <button onclick="subtractPoints('Red', 25)">-25</button>
+            </div>
+            <div>
+                <button onclick="addPoints('Blue', 25)">+25</button>
+                <button onclick="subtractPoints('Blue', 25)">-25</button>
+            </div>
+            <div>
+                <button onclick="addPoints('Green', 25)">+25</button>
+                <button onclick="subtractPoints('Green', 25)">-25</button>
+            </div>
+            <div>
+                <button onclick="addPoints('Yellow', 25)">+25</button>
+                <button onclick="subtractPoints('Yellow', 25)">-25</button>
+            </div>
         </div>
-        <div id="Green" class="team">
-            <h2>Green</h2>
-            <p>Points: <span id="Green-points">0</span></p>
-            <button onclick="addPoints('Green', 25)">+25 Points</button>
-            <button onclick="subtractPoints('Green', 25)">-25 Points</button>
-        </div>
-        <div id="Yellow" class="team">
-            <h2>Yellow</h2>
-            <p>Points: <span id="Yellow-points">0</span></p>
-            <button onclick="addPoints('Yellow', 25)">+25 Points</button>
-            <button onclick="subtractPoints('Yellow', 25)">-25 Points</button>
+
+        <div class="team-scores">
+            <h2>Total Scores</h2>
+            <p>Red: <span id="Red-points">0</span></p>
+            <p>Blue: <span id="Blue-points">0</span></p>
+            <p>Green: <span id="Green-points">0</span></p>
+            <p>Yellow: <span id="Yellow-points">0</span></p>
         </div>
     </div>
-    <h2>Rankings</h2>
-    <div>
-        <label for="first-place">First Place:</label>
-        <select id="first-place" onchange="updateRanking()">
-            <option value="Red">Red</option>
-            <option value="Blue">Blue</option>
-            <option value="Green">Green</option>
-            <option value="Yellow">Yellow</option>
-        </select>
+
+    <div class="button-group">
+        <button onclick="clearScores()">Clear All Scores</button>
+        <button onclick="scoreTeams()">Score Rankings</button>
     </div>
-    <div>
-        <label for="second-place">Second Place:</label>
-        <select id="second-place" onchange="updateRanking()">
-            <option value="Red">Red</option>
-            <option value="Blue">Blue</option>
-            <option value="Green">Green</option>
-            <option value="Yellow">Yellow</option>
-        </select>
+
+    <div id="confirm-dialog" class="confirm-dialog">
+        <p>Are you sure you want to clear all scores?</p>
+        <button onclick="confirmClear(true)">Yes</button>
+        <button onclick="confirmClear(false)">No</button>
     </div>
-    <div>
-        <label for="third-place">Third Place:</label>
-        <select id="third-place" onchange="updateRanking()">
-            <option value="Red">Red</option>
-            <option value="Blue">Blue</option>
-            <option value="Green">Green</option>
-            <option value="Yellow">Yellow</option>
-        </select>
-    </div>
-    <button onclick="scoreTeams()">Score</button>
 
     <script src="script.js"></script>
 </body>
