@@ -1,97 +1,67 @@
-let teamScores = {
-    Red: 0,
-    Blue: 0,
-    Green: 0,
-    Yellow: 0
-};
-
 let rankings = [];
-const rankingPoints = [100, 75, 50, 25]; // Points for 1st, 2nd, 3rd, and 4th places
+const points = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
+const totalPoints = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
 
-function addPoints(team, points) {
-    if (teamScores[team] !== undefined) {
-        teamScores[team] += points;
-        document.getElementById(`${team}-points`).textContent = teamScores[team];
+function selectRanking(color) {
+    // Remove the existing ranking for the color if any
+    rankings = rankings.filter(rank => rank !== color);
+    
+    // Add the selected color to the rankings
+    if (rankings.length < 4 && !rankings.includes(color)) {
+        rankings.push(color);
     }
+    
+    // Update ranking display
+    updateRankingDisplay();
 }
 
-function subtractPoints(team, points) {
-    if (teamScores[team] !== undefined && teamScores[team] >= points) {
-        teamScores[team] -= points;
-        document.getElementById(`${team}-points`).textContent = teamScores[team];
-    }
-}
-
-function selectRanking(team) {
-    // Remove team from rankings if already present
-    if (rankings.includes(team)) {
-        rankings = rankings.filter(r => r !== team);
-        rankings.forEach((rankedTeam, index) => {
-            document.getElementById(`${rankedTeam}-rank`).textContent = `${index + 1}${getOrdinal(index + 1)}`;
-        });
-        updateBoxColors();
-        return;
-    }
-
-    if (rankings.length < 4) {
-        rankings.push(team);
-        updateRankings();
-    }
-    updateBoxColors();
-}
-
-function updateRankings() {
-    const teams = ['Red', 'Blue', 'Green', 'Yellow'];
-    teams.forEach((team, index) => {
-        const rankLabel = document.getElementById(`${team}-rank`);
-        if (rankings.indexOf(team) !== -1) {
-            rankLabel.textContent = `${rankings.indexOf(team) + 1}${getOrdinal(rankings.indexOf(team) + 1)}`;
+function updateRankingDisplay() {
+    const ranks = ['1st', '2nd', '3rd', '4th'];
+    const colorElements = document.querySelectorAll('.ranking');
+    
+    colorElements.forEach((element, index) => {
+        if (index < rankings.length) {
+            element.textContent = `${ranks[index]}`;
         } else {
-            rankLabel.textContent = '';
-        }
-    });
-}
-
-function getOrdinal(n) {
-    const j = n % 10;
-    const k = n % 100;
-    if (j === 1 && k !== 11) {
-        return 'st';
-    }
-    if (j === 2 && k !== 12) {
-        return 'nd';
-    }
-    if (j === 3 && k !== 13) {
-        return 'rd';
-    }
-    return 'th';
-}
-
-function updateBoxColors() {
-    const teams = ['Red', 'Blue', 'Green', 'Yellow'];
-    teams.forEach((team) => {
-        const box = document.getElementById(team);
-        if (rankings.indexOf(team) === -1) {
-            box.style.border = '1px solid black'; // Default border
-        } else {
-            box.style.border = '2px solid gold'; // Highlight selected
+            element.textContent = '';
         }
     });
 }
 
 function scoreTeams() {
+    const scores = { '1st': 100, '2nd': 75, '3rd': 50, '4th': 25 };
+    
+    // Reset points
+    for (const color in points) {
+        points[color] = 0;
+    }
+    
     // Assign points based on rankings
-    rankings.forEach((team, index) => {
-        if (teamScores[team] !== undefined) {
-            teamScores[team] += rankingPoints[index];
-            document.getElementById(`${team}-points`).textContent = teamScores[team];
+    rankings.forEach((color, index) => {
+        const rank = ['1st', '2nd', '3rd', '4th'][index];
+        if (rank) {
+            points[color] = scores[rank];
+            totalPoints[color] += points[color];
         }
     });
-
+    
+    // Update score display
+    updateScoreDisplay();
+    
     // Clear rankings
     rankings = [];
-    updateRankings();
-    updateBoxColors();
+    updateRankingDisplay();
+}
+
+function updateScoreDisplay() {
+    for (const color in points) {
+        document.getElementById(`${color}-points`).textContent = `${color}: ${totalPoints[color]}`;
+    }
+}
+
+function adjustPoints(color, amount) {
+    totalPoints[color] += amount;
+    updateScoreDisplay();
 }
 
 function clearScores() {
@@ -100,15 +70,12 @@ function clearScores() {
 
 function confirmClear(confirm) {
     if (confirm) {
-        // Reset total scores
-        Object.keys(teamScores).forEach(team => {
-            teamScores[team] = 0;
-            document.getElementById(`${team}-points`).textContent = teamScores[team];
-        });
-        // Clear rankings
-        rankings = [];
-        updateRankings();
-        updateBoxColors();
+        // Reset all scores
+        for (const color in totalPoints) {
+            totalPoints[color] = 0;
+        }
+        updateScoreDisplay();
     }
+    // Hide confirmation dialog
     document.getElementById('confirm-dialog').style.display = 'none';
 }

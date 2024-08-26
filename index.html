@@ -3,146 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awana Game Score</title>
-    <style>
-        /* Add your CSS styles here */
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            display: flex;
-            width: 80%;
-            justify-content: space-between;
-        }
-
-        .team-boxes {
-            display: flex;
-            flex-direction: column;
-            width: 20%;
-        }
-
-        .team-box {
-            height: 60px;
-            margin: 5px 0;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .ranking-label {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .score-controls {
-            display: flex;
-            flex-direction: column;
-            width: 20%;
-            align-items: center;
-        }
-
-        .score-controls div {
-            display: flex;
-            align-items: center;
-            margin: 5px 0;
-        }
-
-        .score-controls button {
-            margin: 0 5px;
-        }
-
-        .team-scores {
-            display: flex;
-            flex-direction: column;
-            width: 40%;
-            text-align: center;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .confirm-dialog {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+    <title>Awana Score App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <div class="team-boxes">
-            <div id="Red" class="team-box" style="background-color: red;" onclick="selectRanking('Red')">
-                <span id="Red-rank" class="ranking-label"></span>
-            </div>
-            <div id="Blue" class="team-box" style="background-color: blue;" onclick="selectRanking('Blue')">
-                <span id="Blue-rank" class="ranking-label"></span>
-            </div>
-            <div id="Green" class="team-box" style="background-color: green;" onclick="selectRanking('Green')">
-                <span id="Green-rank" class="ranking-label"></span>
-            </div>
-            <div id="Yellow" class="team-box" style="background-color: yellow;" onclick="selectRanking('Yellow')">
-                <span id="Yellow-rank" class="ranking-label"></span>
-            </div>
+        <div class="left-side">
+            <div id="Red" class="box red" onclick="selectRanking('Red')"></div>
+            <div id="Blue" class="box blue" onclick="selectRanking('Blue')"></div>
+            <div id="Green" class="box green" onclick="selectRanking('Green')"></div>
+            <div id="Yellow" class="box yellow" onclick="selectRanking('Yellow')"></div>
         </div>
-
-        <div class="score-controls">
-            <h2>Adjust Points</h2>
-            <div>
-                <button onclick="addPoints('Red', 25)">+25</button>
-                <button onclick="subtractPoints('Red', 25)">-25</button>
-            </div>
-            <div>
-                <button onclick="addPoints('Blue', 25)">+25</button>
-                <button onclick="subtractPoints('Blue', 25)">-25</button>
-            </div>
-            <div>
-                <button onclick="addPoints('Green', 25)">+25</button>
-                <button onclick="subtractPoints('Green', 25)">-25</button>
-            </div>
-            <div>
-                <button onclick="addPoints('Yellow', 25)">+25</button>
-                <button onclick="subtractPoints('Yellow', 25)">-25</button>
-            </div>
+        <div class="middle">
+            <div id="Red-points" class="score">Red: 0</div>
+            <div id="Blue-points" class="score">Blue: 0</div>
+            <div id="Green-points" class="score">Green: 0</div>
+            <div id="Yellow-points" class="score">Yellow: 0</div>
         </div>
-
-        <div class="team-scores">
-            <h2>Total Scores</h2>
-            <p>Red: <span id="Red-points">0</span></p>
-            <p>Blue: <span id="Blue-points">0</span></p>
-            <p>Green: <span id="Green-points">0</span></p>
-            <p>Yellow: <span id="Yellow-points">0</span></p>
+        <div class="right-side">
+            <div class="adjustment">
+                <button onclick="adjustPoints('Red', 25)">+25</button>
+                <button onclick="adjustPoints('Red', -25)">-25</button>
+            </div>
+            <div class="adjustment">
+                <button onclick="adjustPoints('Blue', 25)">+25</button>
+                <button onclick="adjustPoints('Blue', -25)">-25</button>
+            </div>
+            <div class="adjustment">
+                <button onclick="adjustPoints('Green', 25)">+25</button>
+                <button onclick="adjustPoints('Green', -25)">-25</button>
+            </div>
+            <div class="adjustment">
+                <button onclick="adjustPoints('Yellow', 25)">+25</button>
+                <button onclick="adjustPoints('Yellow', -25)">-25</button>
+            </div>
         </div>
     </div>
-
-    <div class="button-group">
-        <button onclick="clearScores()">Clear All Scores</button>
+    <div class="button-container">
         <button onclick="scoreTeams()">Score Rankings</button>
+        <button onclick="clearScores()">Clear All Scores</button>
     </div>
-
-    <div id="confirm-dialog" class="confirm-dialog">
+    <div id="confirm-dialog">
         <p>Are you sure you want to clear all scores?</p>
         <button onclick="confirmClear(true)">Yes</button>
         <button onclick="confirmClear(false)">No</button>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
