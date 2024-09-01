@@ -1,81 +1,66 @@
-let rankings = [];
-const points = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
-const totalPoints = { Red: 0, Blue: 0, Green: 0, Yellow: 0 };
+let rankings = {
+    Red: null,
+    Blue: null,
+    Green: null,
+    Yellow: null
+};
+
+let totalScores = {
+    Red: 0,
+    Blue: 0,
+    Green: 0,
+    Yellow: 0
+};
 
 function selectRanking(color) {
-    // Remove the existing ranking for the color if any
-    rankings = rankings.filter(rank => rank !== color);
-    
-    // Add the selected color to the rankings
-    if (rankings.length < 4 && !rankings.includes(color)) {
-        rankings.push(color);
+    const currentRanking = Object.values(rankings).filter(rank => rank !== null).length + 1;
+    if (rankings[color] === null) {
+        rankings[color] = currentRanking;
+    } else {
+        rankings[color] = null;
+        for (let key in rankings) {
+            if (rankings[key] && rankings[key] > rankings[color]) {
+                rankings[key] -= 1;
+            }
+        }
     }
-    
-    // Update ranking display
-    updateRankingDisplay();
+    updateRankings();
 }
 
-function updateRankingDisplay() {
-    const ranks = ['1st', '2nd', '3rd', '4th'];
-    const colorElements = document.querySelectorAll('.ranking');
-    
-    colorElements.forEach((element, index) => {
-        if (index < rankings.length) {
-            element.textContent = `${ranks[index]}`;
+function updateRankings() {
+    for (let color in rankings) {
+        const rankElement = document.getElementById(`${color}-points`);
+        if (rankings[color]) {
+            rankElement.textContent = `${color}: ${rankings[color]} place`;
         } else {
-            element.textContent = '';
+            rankElement.textContent = `${color}: ${totalScores[color]}`;
         }
-    });
+    }
+}
+
+function adjustPoints(color, points) {
+    totalScores[color] += points;
+    document.getElementById(`${color}-points`).textContent = `${color}: ${totalScores[color]}`;
 }
 
 function scoreTeams() {
-    const scores = { '1st': 100, '2nd': 75, '3rd': 50, '4th': 25 };
-    
-    // Reset points
-    for (const color in points) {
-        points[color] = 0;
-    }
-    
-    // Assign points based on rankings
-    rankings.forEach((color, index) => {
-        const rank = ['1st', '2nd', '3rd', '4th'][index];
-        if (rank) {
-            points[color] = scores[rank];
-            totalPoints[color] += points[color];
+    const pointsMap = {1: 100, 2: 75, 3: 50, 4: 25};
+    for (let color in rankings) {
+        if (rankings[color]) {
+            totalScores[color] += pointsMap[rankings[color]];
+            rankings[color] = null;
         }
-    });
-    
-    // Update score display
-    updateScoreDisplay();
-    
-    // Clear rankings
-    rankings = [];
-    updateRankingDisplay();
-}
-
-function updateScoreDisplay() {
-    for (const color in points) {
-        document.getElementById(`${color}-points`).textContent = `${color}: ${totalPoints[color]}`;
     }
-}
-
-function adjustPoints(color, amount) {
-    totalPoints[color] += amount;
-    updateScoreDisplay();
+    updateRankings();
 }
 
 function clearScores() {
-    document.getElementById('confirm-dialog').style.display = 'block';
+    if (confirm("Are you sure you want to clear all scores?")) {
+        for (let color in totalScores) {
+            totalScores[color] = 0;
+            rankings[color] = null;
+        }
+        updateRankings();
+    }
 }
 
-function confirmClear(confirm) {
-    if (confirm) {
-        // Reset all scores
-        for (const color in totalPoints) {
-            totalPoints[color] = 0;
-        }
-        updateScoreDisplay();
-    }
-    // Hide confirmation dialog
-    document.getElementById('confirm-dialog').style.display = 'none';
-}
